@@ -85,11 +85,11 @@ jobs:
 
       - if: matrix.os == 'windows-latest'
         name: Set extension to .exe on Windows
-	run: echo "EXT=.exe" >> $GITHUB_ENV
+        run: echo "EXT=.exe" >> $GITHUB_ENV
         # run: echo "::set-env name=EXT::.exe"
 
       - name: Set binary path name
-	run: echo "BINARY_PATH=./dist/tlatpl${{ env.EXT }}" >> $GITHUB_ENV
+        run: echo "BINARY_PATH=./dist/tlatpl${{ env.EXT }}" >> $GITHUB_ENV
         # run: echo "::set-env name=BINARY_PATH::./dist/tlatpl${{ env.EXT }}"
 
       - name: Strip binary
