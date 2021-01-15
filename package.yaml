@@ -44,4 +44,7 @@ tests:
     - -rtsopts
     - -with-rtsopts=-N
     dependencies:
+    - HUnit
+    - megaparsec
+    - text
     - tlatpl

@@ -1,9 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 
-module Parser
-    ( parseTplFile
-    ) where
+module Parser where
 
 import Control.Applicative ( optional, (<|>) )
 import Control.Monad (void)
@@ -35,7 +33,7 @@ import Text.Megaparsec.Char
 import qualified Text.Megaparsec.Char.Lexer as L
 import Text.Printf (printf)
 
-import Types (Model(..), Defs(..), BindName(..), Name)
+import Types (Model(..), Defs(..), BindName(..), BoundValue(..), Name)
 
 type Parser = Parsec Void Text
 
@@ -79,21 +77,44 @@ bindNameP = do
     args <- option [] $ between (symbol "(") (symbol ")") $ commaSep1 identifierP
     pure $ BindName name args
 
-bindP :: Parser (BindName, String)
+symbols :: [Text] -> Parser ()
+symbols = mapM_ symbol
+
+modelValueTagP :: Parser ()
+modelValueTagP = try $ symbols ["[", "model", "value", "]"]
+
+symmetryTagP :: Parser Bool
+symmetryTagP = option False (True <$ symbols ["<", "symmetrical", ">"])
+
+modelValueP :: Parser BoundValue
+modelValueP = ModelValue <$> identifierP
+
+nameSetP :: Parser [Name]
+nameSetP = between (symbol "{") (symbol "}") $ commaSep identifierP
+
+modelValuesP :: Parser BoundValue
+modelValuesP = ModelValues <$> symmetryTagP <*> nameSetP
+
+boundValueP :: Parser () -> Parser BoundValue
+boundValueP uptoP =
+    (modelValueTagP >> (modelValueP <|> modelValuesP))
+    <|>
+    Expression <$> someTill anySingle (lookAhead uptoP)
+
+bindP :: Parser (BindName, BoundValue)
 bindP = do
     let lhs = bindNameP <* symbol "<-"
+        uptoP = try (void lhs) <|> void (symbol ";")
     name <- lhs
-    expr <- someTill anySingle $ lookAhead $ try (void lhs) <|> void (symbol ";")
-    pure (name, expr)
+    value <- boundValueP uptoP
+    pure (name, value)
 
 booleanP :: Parser Bool
-booleanP = (symbol "TRUE" *> pure True) <|> (symbol "FALSE" *> pure False)
+booleanP = (True <$ symbol "TRUE") <|> (False <$ symbol "FALSE")
 
 modelP :: Parser Model
 modelP = do
     moduleName :: Name <- stmtP "MODULE" identifierP
-    modelValues <- option [] $ stmtExP (keywordP "MODEL" >> keywordP "VALUES")
-        $ many1 identifierP
     constants <- option [] $ stmtP "CONSTANTS" $ many1 bindP
     specification <- stmtP "SPECIFICATION" identifierP
     checkDeadlock <- option True $ stmtP "CHECK_DEADLOCK" booleanP
@@ -106,7 +127,7 @@ modelP = do
         , m_checkDeadlock = checkDeadlock
         , m_invariants = invariants
         , m_properties = properties
-        , m_constants = Defs modelValues constants }
+        , m_constants = Defs constants }
 
 parseTpl :: String -> Text -> Either (ParseErrorBundle Text Void) Model
 parseTpl fileName content = runParser modelP fileName content

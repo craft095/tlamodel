@@ -1,12 +1,18 @@
-module Types ( Defs(..), Model(..), BindName(..), Name) where
+module Types ( Defs(..), Model(..), BindName(..), BoundValue(..), Name) where
 
 type Name = String
 
 data BindName = BindName Name [Name]
+    deriving (Show, Eq)
 
-data Defs = Defs
-    { d_modelValues :: [Name]
-    , d_constants :: [(BindName, String)] }
+data BoundValue
+    = ModelValue { bv_modelValue :: Name }
+    | ModelValues { bv_symmetry :: Bool, bv_modelValues :: [Name] }
+    | Expression String
+    deriving (Show, Eq)
+
+newtype Defs = Defs { d_constants :: [(BindName, BoundValue)] }
+    deriving (Show, Eq)
 
 data Model = Model
     { m_module :: Name
@@ -15,3 +21,4 @@ data Model = Model
     , m_properties :: [String ]
     , m_specification :: Name
     , m_constants :: Defs }
+    deriving (Show, Eq)

@@ -4,10 +4,10 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 98ea9a03fb74bd4d92fa0ed4f51b6754ffc5b5789cd31ee69a780bcd523d5d50
+-- hash: e0023c8dac1d2097d34f25af760a4896a8ef36ab9fdc1d34d3a99aab9bbcbd75
 
 name:           tlatpl
-version:        0.1.0
+version:        0.9.0
 description:    Please see the README on GitHub at <https://github.com/craft095/tlatpl#readme>
 homepage:       https://github.com/craft095/tlatpl#readme
 bug-reports:    https://github.com/craft095/tlatpl/issues
@@ -65,6 +65,9 @@ test-suite tlatpl-test
       test
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      base >=4.7 && <5
+      HUnit
+    , base >=4.7 && <5
+    , megaparsec
+    , text
     , tlatpl
   default-language: Haskell2010
