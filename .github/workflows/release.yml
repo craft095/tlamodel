@@ -84,12 +84,10 @@ jobs:
           cabal install exe:tlatpl --install-method=copy --overwrite-policy=always --installdir=dist
 
       - if: matrix.os == 'windows-latest'
-        name: Set extension to .exe on Windows
-        run: echo "EXT=.exe" >> $GITHUB_ENV
-
-      - if: matrix.os == 'windows-latest'
         name: Set windows binary path name
-        run: echo "BINARY_PATH=./dist/tlatpl.exe" >> $GITHUB_ENV
+        run: |
+          chcp 65001 #set code page to utf-8
+          echo "BINARY_PATH=./dist/tlatpl.exe" >> $GITHUB_ENV
 
       - if: matrix.os != 'windows-latest'
         name: Set non windows binary path name
