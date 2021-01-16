@@ -55,14 +55,14 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Set tag name
-        uses: olegtarasov/get-tag@v2
+        uses: olegtarasov/get-tag@v2.1
         id: tag
         with:
           tagRegex: "v(.*)"
           tagRegexGroup: 1
 
       - name: Setup Haskell
-        uses: actions/setup-haskell@v1.1.1
+        uses: haskell/actions/setup@v1
         id: setup-haskell-cabal
         with:
           ghc-version: ${{ matrix.ghc }}
@@ -86,11 +86,9 @@ jobs:
       - if: matrix.os == 'windows-latest'
         name: Set extension to .exe on Windows
         run: echo "EXT=.exe" >> $GITHUB_ENV
-        # run: echo "::set-env name=EXT::.exe"
 
       - name: Set binary path name
         run: echo "BINARY_PATH=./dist/tlatpl${{ env.EXT }}" >> $GITHUB_ENV
-        # run: echo "::set-env name=BINARY_PATH::./dist/tlatpl${{ env.EXT }}"
 
       - name: Strip binary
         run: strip ${{ env.BINARY_PATH }}
