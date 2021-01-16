@@ -45,6 +45,7 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - HUnit
+    - file-embed
     - megaparsec
     - text
     - tlatpl

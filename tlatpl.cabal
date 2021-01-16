@@ -4,10 +4,10 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: e0023c8dac1d2097d34f25af760a4896a8ef36ab9fdc1d34d3a99aab9bbcbd75
+-- hash: 5d3063eda70127c3ed4fd8e19118d10cd3695930fabf9f61a5cef1be5bf9cb88
 
 name:           tlatpl
-version:        0.9.0
+version:        0.1.0
 description:    Please see the README on GitHub at <https://github.com/craft095/tlatpl#readme>
 homepage:       https://github.com/craft095/tlatpl#readme
 bug-reports:    https://github.com/craft095/tlatpl/issues
@@ -67,6 +67,7 @@ test-suite tlatpl-test
   build-depends:
       HUnit
     , base >=4.7 && <5
+    , file-embed
     , megaparsec
     , text
     , tlatpl

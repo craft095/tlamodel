@@ -1,6 +1,9 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE TemplateHaskell #-}
 
+import Data.FileEmbed
+import Data.String (IsString)
 import Data.Text (Text)
 import Test.HUnit
 import Test.HUnit.Text
@@ -8,6 +11,24 @@ import Text.Megaparsec as P
 
 import Types
 import Parser
+import Gen
+
+tplFile0 :: Text
+tplFile0 = $(embedStringFile "test/PriorityQueue.tpl")
+tlaFile0 :: String
+tlaFile0 = $(embedStringFile "test/MCPriorityQueue.tla")
+cfgFile0 :: String
+cfgFile0 = $(embedStringFile "test/MCPriorityQueue.cfg")
+
+systemTests :: [Test]
+systemTests = let
+    Right model = parseTpl "PriorityQueue.tpl" tplFile0
+    (mcBody, cfg) = genMC model
+    cfgBody = genCfg cfg
+    in
+        [ TestCase $ assertEqual "Compare MC*.tla" mcBody tlaFile0
+        , TestCase $ assertEqual "Compare MC*.cfg" cfgBody cfgFile0
+        ]
 
 parserCaseOk :: (Eq a, Show a) => String -> Parser a -> a -> Text -> Test
 parserCaseOk title p expected content =
@@ -68,7 +89,7 @@ case4_1 = parserCaseOk "Bind An Scalar Expression/<-" bindP expected content
     expected = (BindName "Procs" [], Expression "[ a \\in {1..2} |-> a * a ] ")
 
 tests :: Test
-tests = TestList
+tests = TestList $
     [ case0
     , case1
     , case1_1
@@ -79,6 +100,7 @@ tests = TestList
     , case4
     , case4_1
     ]
+    ++ systemTests
 
 main :: IO ()
 main = runTestTTAndExit tests

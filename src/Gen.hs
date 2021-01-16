@@ -1,12 +1,13 @@
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE NamedFieldPuns #-}
 
-module Gen (gen) where
-
-import Types (Defs (..), Model (..), BindName(..), BoundValue(..), Name)
-import Text.Printf (printf)
+module Gen where
 
 import qualified Data.List as List
+import Data.Maybe (catMaybes)
+import Text.Printf (printf)
+
+import Types (Defs (..), Model (..), BindName(..), BoundValue(..), Name)
 
 data Cfg = Cfg
     { c_mcName :: Name
@@ -24,7 +25,7 @@ genMC model = (mc, cfg)
         mcName = "MC" ++ m_module model
         header = dashes ++ printf " MODULE %s " mcName ++ dashes
         footer = replicate (length header) '='
-        extends = "EXTENDS " ++ m_module model
+        extends = "EXTENDS TLC, " ++ m_module model
 
         commaSep = List.intercalate ","
 
@@ -49,27 +50,29 @@ genMC model = (mc, cfg)
         prettyRhs (ModelValues _ names) = printf "{ %s }" $ commaSep names
         prettyRhs (Expression expr) = expr
 
-        addVar :: Int -> (BindName, BoundValue) -> (String, String)
-        addVar ix (lhs@(BindName name _), rhs) = (varPrefixF name ix, def)
+        addVar :: Int -> (BindName, BoundValue) -> (String, String, Maybe String)
+        addVar ix (lhs@(BindName name _), rhs) = (varPrefixF name ix, def, symmVar)
             where
                 var = varPrefixF name ix
                 argsF (BindName _ []) = ""
                 argsF (BindName _ args) = printf "(%s)" (commaSep args)
                 def = printf "%s%s == %s" var (argsF lhs) (prettyRhs rhs)
+                symmVar = case rhs of
+                    ModelValues True _ -> Just ("symm_" ++ var)
+                    _ -> Nothing
 
-        addSymmVar :: Int -> Name -> (String, String)
-        addSymmVar ix name = (symmVar, symmDef)
+        addSymmVar :: Name -> Maybe Name -> Maybe (String, String)
+        addSymmVar _ Nothing = Nothing
+        addSymmVar var (Just symmVar) = Just (symmVar, symmDef)
             where
-                var = varPrefixF name ix
-                symmVar = "symm_" ++ var
                 symmDef = printf "%s == Permutations(%s)" symmVar var
 
-        (names, defs') = unzip $ zipWith addVar [0..] d_constants
+        (names, defs', symmNames) = unzip3 $ zipWith addVar [0..] d_constants
         getName :: (BindName, a) -> Name
         getName (BindName name _, _) = name
         remap = zip (map getName d_constants) names
 
-        (symmVars, symmDefs) = unzip $ zipWith addSymmVar [0..] symmetry
+        (symmVars, symmDefs) = unzip . catMaybes $ zipWith addSymmVar names symmNames
 
         constants =
             if null modelValues
@@ -79,7 +82,6 @@ genMC model = (mc, cfg)
         body = List.intercalate [""] [[header], [extends], [constants], defs', symmDefs, [footer]]
 
         mc = unlines body
-
         cfg = Cfg mcName model modelValues symmVars remap
 
 genCfg :: Cfg -> String
