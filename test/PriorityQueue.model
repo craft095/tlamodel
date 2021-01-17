@@ -1,6 +1,6 @@
 MODULE PriorityQueue;
 
-CONSTANTS 
+CONSTANTS
     MaxSize <- 3
     Tags <- [model value] <symmetrical> {p1, p2, p3}
     LessOrEqual(x,y) <-

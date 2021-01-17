@@ -43,18 +43,18 @@ import Types (Model(..), Defs(..), BindName(..), BoundValue(..), Name)
 
 type Parser = Parsec Void Text
 
-sc :: Parser ()
-sc =
+spaceP :: Parser ()
+spaceP =
   L.space
     space1
     (L.skipLineComment "\\*")
     (L.skipBlockComment "(*" "*)")
 
 lexeme :: Parser a -> Parser a
-lexeme = L.lexeme sc
+lexeme = L.lexeme spaceP
 
 symbol :: Text -> Parser Text
-symbol = L.symbol sc
+symbol = L.symbol spaceP
 
 many1 :: Parser a -> Parser [a]
 many1 p = (:) <$> p <*> many p
@@ -167,10 +167,10 @@ resolve' = foldM f pre0
                 in pure pre { pm_invariants = invs0 ++ invs }
 
 resolve :: String -> Decls -> Either String Model
-resolve moduleName decls = do
+resolve moduleNameDef decls = do
     PreModel {..} <- resolve' decls
     specificationName <- maybe (Left "SPECIFICATION must be specified") pure pm_specification
-    let moduleName = fromMaybe moduleName pm_moduleName
+    let moduleName = fromMaybe moduleNameDef pm_moduleName
         checkDeadlock = fromMaybe True pm_checkDeadlock
 
     pure Model
@@ -196,7 +196,7 @@ declP = do
     moduleNameP <|> constantsP <|> specP <|> deadlockP <|> invsP <|> propsP
 
 declsP :: Parser Decls
-declsP = many1 declP
+declsP = spaceP *> many1 declP
 
 parseModel :: String -> Text -> Either String Decls
 parseModel fileName content = case runParser declsP fileName content of
