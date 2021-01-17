@@ -1,7 +1,7 @@
 module Main where
 
 import Gen (gen)
-import Parser (parseTplFile)
+import Parser (parseAndResolveModelFile)
 
 import Options.Applicative
 import Data.Semigroup ((<>))
@@ -28,5 +28,5 @@ opts = info (args <**> helper)
 main :: IO ()
 main = do
     options <- execParser opts
-    model <- parseTplFile ("." : paths options) $ file options
+    model <- parseAndResolveModelFile ("." : paths options) $ file options
     gen model

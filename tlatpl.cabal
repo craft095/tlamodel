@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 5d3063eda70127c3ed4fd8e19118d10cd3695930fabf9f61a5cef1be5bf9cb88
+-- hash: 85c754747a8fb3fa7394e659eee8fc80c1ce06de9e2c97e0ff046a4e4e1e408d
 
 name:           tlatpl
 version:        0.1.0
@@ -38,6 +38,7 @@ library
   build-depends:
       base >=4.7 && <5
     , directory
+    , filepath
     , megaparsec
     , mtl
     , text

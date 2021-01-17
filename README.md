@@ -23,7 +23,7 @@ Configuration is specified in <filename>.tpl file:
     comments
 *)
 
-MODULE MyModule ;                         \* The name of TLA module to model check (mandatory)
+MODULE MyModule ;                         \* The name of TLA module to model check (file name used by default)
 
 CONSTANTS
   C0 <- 42                                \* scalar name and arbitrary TLA expression
@@ -34,7 +34,7 @@ CONSTANTS
   ;
 
 SPECIFICATION Spec ;                      \* Specification name (mandatory)
-CHECK_DEADLOCK TRUE ;                     \* Check for deadlock?
+CHECK_DEADLOCK TRUE ;                     \* Check for deadlock? (TRUE by default)
 INVARIANT TypeOK Inv0 Inv1;               \* Invariants
 PROPERTY NoStarvation Prop1;              \* Properties
 

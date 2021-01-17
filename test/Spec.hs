@@ -22,7 +22,7 @@ cfgFile0 = $(embedStringFile "test/MCPriorityQueue.cfg")
 
 systemTests :: [Test]
 systemTests = let
-    Right model = parseTpl "PriorityQueue.tpl" tplFile0
+    Right model = parseAndResolveModel "PriorityQueue.tpl" tplFile0
     (mcBody, cfg) = genMC model
     cfgBody = genCfg cfg
     in
