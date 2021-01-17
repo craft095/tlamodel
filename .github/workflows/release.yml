@@ -87,7 +87,7 @@ jobs:
         name: Set windows binary path name
         run: |
           chcp 65001 #set code page to utf-8
-          echo "BINARY_PATH=./dist/tlatpl.exe" >> $GITHUB_ENV
+          echo "BINARY_PATH=./dist/tlatpl.exe" >> $env:GITHUB_ENV
 
       - if: matrix.os != 'windows-latest'
         name: Set non windows binary path name
