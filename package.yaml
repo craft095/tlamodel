@@ -1,6 +1,6 @@
-name:                tlatpl
-version:             0.1.0
-github:              "craft095/tlatpl"
+name:                tlamodel
+version:             0.9.9
+github:              "craft095/tlamodel"
 license:             BSD3
 author:              "Dmitry Kulagin"
 maintainer:          "dmitry.kulagin@gmail.com"
@@ -10,7 +10,7 @@ extra-source-files:
 - README.md
 - ChangeLog.md
 
-description:         Please see the README on GitHub at <https://github.com/craft095/tlatpl#readme>
+description:         Please see the README on GitHub at <https://github.com/craft095/tlamodel#readme>
 
 dependencies:
 - base >= 4.7 && < 5
@@ -25,7 +25,7 @@ library:
   - text
 
 executables:
-  tlatpl:
+  tlamodel:
     main:                Main.hs
     source-dirs:         app
     ghc-options:
@@ -34,10 +34,10 @@ executables:
     - -with-rtsopts=-N
     dependencies:
     - optparse-applicative
-    - tlatpl
+    - tlamodel
 
 tests:
-  tlatpl-test:
+  tlamodel-test:
     main:                Spec.hs
     source-dirs:         test
     ghc-options:
@@ -49,4 +49,4 @@ tests:
     - file-embed
     - megaparsec
     - text
-    - tlatpl
+    - tlamodel

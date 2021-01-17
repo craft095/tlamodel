@@ -1,4 +1,4 @@
-# Configuration files generation for TLA+/TLC
+# Model configuration generation for TLA+/TLC
 
 This tool takes care about boilerplate, which is required if you wish to work with TLC
 from command line. Due to TLA+/TLC specifics, some settings can only be specified in CFG file and
@@ -8,12 +8,12 @@ this small utility :)
 
 ## How to use
 
-The idea is to collect all TLC-related settings in one file with CFG-like syntax and generate all
-needed artifacts from this file. I tried to keep syntax as close as possible to those in CFG and
-in Toolbox GUI. However, to avoid true TLA expression parsing I had to introduce delimiter between
-statements (semicolon).
+The idea is to collect all TLC-related settings (model) in one file with CFG-like syntax and
+generate all needed artifacts from this file. I tried to keep syntax as close as possible to those
+in CFG and in Toolbox GUI. However, to avoid true TLA expression parsing I had to introduce
+delimiter between statements (semicolon).
 
-Configuration is specified in <filename>.tpl file:
+Configuration is specified in <filename>.model file:
 
 ```
 \* Use TLA-style comments:
@@ -43,13 +43,13 @@ PROPERTY NoStarvation Prop1;              \* Properties
 Use it with:
 
 ```
-tlatpl [-s|--search-path <path>] MyModule.tpl
+tlamodel [-s|--search-path <path>] MyModule.model
 ```
 
-You can use -s option multiple times, then MyModule.tpl will be search in all these paths (current
+You can use -s option multiple times, then MyModule.model will be search in all these paths (current
 folder is always used first)
 
-It generates to files:
+It generates two files:
 
 * MCMyModule.tla
 * MCMyModule.cfg

@@ -81,17 +81,17 @@ jobs:
       - name: Build binary
         run: |
           mkdir dist
-          cabal install exe:tlatpl --install-method=copy --overwrite-policy=always --installdir=dist
+          cabal install exe:tlamodel --install-method=copy --overwrite-policy=always --installdir=dist
 
       - if: matrix.os == 'windows-latest'
         name: Set windows binary path name
         run: |
           chcp 65001 #set code page to utf-8
-          echo "BINARY_PATH=./dist/tlatpl.exe" >> $env:GITHUB_ENV
+          echo "BINARY_PATH=./dist/tlamodel.exe" >> $env:GITHUB_ENV
 
       - if: matrix.os != 'windows-latest'
         name: Set non windows binary path name
-        run: echo "BINARY_PATH=./dist/tlatpl" >> $GITHUB_ENV
+        run: echo "BINARY_PATH=./dist/tlamodel" >> $GITHUB_ENV
 
       - name: Strip binary
         run: strip ${{ env.BINARY_PATH }}
@@ -99,7 +99,7 @@ jobs:
       # - name: Compress binary
       #   uses: svenstaro/upx-action@v2
       #   with:
-      #     file: dist/tlatpl
+      #     file: dist/tlamodel
 
       - name: Load Release URL File from release job
         uses: actions/download-artifact@v1
@@ -119,5 +119,5 @@ jobs:
         with:
           upload_url: ${{ steps.get_release_info.outputs.upload_url }}
           asset_path: ${{ env.BINARY_PATH }}
-          asset_name: tlatpl-${{ steps.tag.outputs.tag }}-${{ runner.os }}-ghc-${{ matrix.ghc }}${{ env.EXT }}
+          asset_name: tlamodel-${{ steps.tag.outputs.tag }}-${{ runner.os }}-ghc-${{ matrix.ghc }}${{ env.EXT }}
           asset_content_type: application/octet-stream

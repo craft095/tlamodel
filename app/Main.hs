@@ -16,13 +16,13 @@ args = Args
         ( long "search-path"
         <> short 's'
         <> metavar "PATH"
-        <> help "TPL folder path" ))
+        <> help "model folder path" ))
     <*> argument str (metavar "FILE")
 
 opts :: ParserInfo Args
 opts = info (args <**> helper)
   ( fullDesc
-  <> progDesc "Convert template (TPL) into CFG/TLA files"
+  <> progDesc "Convert TLC model specification into CFG/TLA files"
   <> header "To simplify work with TLA specifications from command line" )
 
 main :: IO ()

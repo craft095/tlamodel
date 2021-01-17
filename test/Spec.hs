@@ -14,7 +14,7 @@ import Parser
 import Gen
 
 tplFile0 :: Text
-tplFile0 = $(embedStringFile "test/PriorityQueue.tpl")
+tplFile0 = $(embedStringFile "test/PriorityQueue.model")
 tlaFile0 :: String
 tlaFile0 = $(embedStringFile "test/MCPriorityQueue.tla")
 cfgFile0 :: String
@@ -22,7 +22,7 @@ cfgFile0 = $(embedStringFile "test/MCPriorityQueue.cfg")
 
 systemTests :: [Test]
 systemTests = let
-    Right model = parseAndResolveModel "PriorityQueue.tpl" tplFile0
+    Right model = parseAndResolveModel "PriorityQueue.model" tplFile0
     (mcBody, cfg) = genMC model
     cfgBody = genCfg cfg
     in
