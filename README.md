@@ -30,7 +30,7 @@ CONSTANTS
   C1(x) <- x * x                          \* operator and arbitrary TLA expression
   C2 <- [model value] X                   \* a single model value
   C3 <- [model value] { Y, Z }            \* a set of model values
-  C2 <- [model value] <symmetrical> {}    \* a symmetrical set of model valuese
+  C2 <- [model value] <symmetrical> { W } \* a symmetrical set of model values
   ;
 
 SPECIFICATION Spec ;                      \* Specification name (mandatory)

@@ -1,5 +1,5 @@
 name:                tlamodel
-version:             0.9.9
+version:             0.9.11
 github:              "craft095/tlamodel"
 license:             BSD3
 author:              "Dmitry Kulagin"
@@ -28,6 +28,7 @@ executables:
   tlamodel:
     main:                Main.hs
     source-dirs:         app
+    other-modules:       Paths_tlamodel
     ghc-options:
     - -threaded
     - -rtsopts
