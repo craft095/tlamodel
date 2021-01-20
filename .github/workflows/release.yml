@@ -92,27 +92,27 @@ jobs:
         name: Set binary and archive path names
         run: |
           echo "ARCHIVE_EXT=.tar.gz" >> $GITHUB_ENV
-          echo "BINARY_PATH=./dist/tlamodel" >> $GITHUB_ENV
+          echo "BINARY_PATH=tlamodel" >> $GITHUB_ENV
 
       - if: matrix.os == 'windows-latest'
         name: Set binary and archive path names on Windows
         run: |
           echo "ARCHIVE_EXT=.zip" >> $GITHUB_ENV
-          echo "BINARY_PATH=./dist/tlamodel.exe" >> $GITHUB_ENV
+          echo "BINARY_PATH=tlamodel.exe" >> $GITHUB_ENV
 
       - name: Strip binary
-        run: strip ${{ env.BINARY_PATH }}
+        run: (cd dist && strip ${{ env.BINARY_PATH }})
 
       - name: Set archive path
         run: echo "ARCHIVE_PATH=${{ env.BINARY_PATH }}${{ env.ARCHIVE_EXT }}" >> $GITHUB_ENV
 
       - if: matrix.os == 'windows-latest'
         name: Make archive on Windows
-        run: tar -a -c -f ${{ env.ARCHIVE_PATH }} ${{ env.BINARY_PATH }}
+        run: (cd dist && tar -a -c -f ${{ env.ARCHIVE_PATH }} ${{ env.BINARY_PATH }})
 
       - if: matrix.os != 'windows-latest'
         name: Make archive
-        run: tar czf ${{ env.ARCHIVE_PATH }} ${{ env.BINARY_PATH }}
+        run: (cd dist && tar czf ${{ env.ARCHIVE_PATH }} ${{ env.BINARY_PATH }})
 
       - name: Load Release URL File from release job
         uses: actions/download-artifact@v1
@@ -131,6 +131,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.get_release_info.outputs.upload_url }}
-          asset_path: ${{ env.ARCHIVE_PATH }}
+          asset_path: ./dist/${{ env.ARCHIVE_PATH }}
           asset_name: tlamodel-${{ steps.tag.outputs.tag }}-${{ runner.os }}-ghc-${{ matrix.ghc }}${{ env.ARCHIVE_EXT }}
           asset_content_type: application/octet-stream
