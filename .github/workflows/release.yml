@@ -8,6 +8,11 @@ on:
     tags:
       - "v*"
 
+defaults:
+  run:
+    # Needed on Windows 10 to change from PowerShell to bash that is included as part of Git
+    shell: bash
+
 jobs:
   create_release:
     name: Create Github Release
@@ -84,14 +89,11 @@ jobs:
           cabal install exe:tlamodel --install-method=copy --overwrite-policy=always --installdir=dist
 
       - if: matrix.os == 'windows-latest'
-        name: Set windows binary path name
-        run: |
-          chcp 65001 #set code page to utf-8
-          echo "BINARY_PATH=./dist/tlamodel.exe" >> $env:GITHUB_ENV
+        name: Set extension to .exe on Windows
+        run: echo "EXT=.exe" >> $GITHUB_ENV
 
-      - if: matrix.os != 'windows-latest'
-        name: Set non windows binary path name
-        run: echo "BINARY_PATH=./dist/tlamodel" >> $GITHUB_ENV
+      - name: Set binary path name
+        run: echo "BINARY_PATH=./dist/tlamodel${{ env.EXT }}" >> $GITHUB_ENV
 
       - name: Strip binary
         run: strip ${{ env.BINARY_PATH }}
