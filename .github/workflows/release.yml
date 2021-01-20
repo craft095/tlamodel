@@ -91,8 +91,8 @@ jobs:
       - if: matrix.os != 'windows-latest'
         name: Set binary and archive path names
         run: |
-        echo "ARCHIVE_EXT=.tar.gz" >> $GITHUB_ENV
-        run: echo "BINARY_PATH=./dist/tlamodel" >> $GITHUB_ENV
+          echo "ARCHIVE_EXT=.tar.gz" >> $GITHUB_ENV
+          echo "BINARY_PATH=./dist/tlamodel" >> $GITHUB_ENV
 
       - if: matrix.os == 'windows-latest'
         name: Set binary and archive path names on Windows
