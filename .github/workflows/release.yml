@@ -90,17 +90,15 @@ jobs:
 
       - if: matrix.os != 'windows-latest'
         name: Set binary and archive path names
-        run: |
-          echo "ARCHIVE_EXT=.tar.gz" >> $GITHUB_ENV
-          echo "BINARY_PATH=./dist/tlamodel" >> $GITHUB_ENV
-          echo "ARCHIVE_PATH=${{ env.BINARY_PATH }}.${{ env.ARCHIVE_EXT }}" >> $GITHUB_ENV
+        run: echo "ARCHIVE_EXT=.tar.gz" >> $GITHUB_ENV
+        run: echo "BINARY_PATH=./dist/tlamodel" >> $GITHUB_ENV
+        run: echo "ARCHIVE_PATH=${{ env.BINARY_PATH }}${{ env.ARCHIVE_EXT }}" >> $GITHUB_ENV
 
       - if: matrix.os == 'windows-latest'
         name: Set binary and archive path names on Windows
-        run: |
-          echo "ARCHIVE_EXT=.zip" >> $GITHUB_ENV
-          echo "BINARY_PATH=./dist/tlamodel.exe" >> $GITHUB_ENV
-          echo "ARCHIVE_PATH=./dist/tlamodel.zip" >> $GITHUB_ENV
+        run: echo "ARCHIVE_EXT=.zip" >> $GITHUB_ENV
+        run: echo "BINARY_PATH=./dist/tlamodel.exe" >> $GITHUB_ENV
+        run: echo "ARCHIVE_PATH=./dist/tlamodel.zip" >> $GITHUB_ENV
 
       - name: Strip binary
         run: strip ${{ env.BINARY_PATH }}
