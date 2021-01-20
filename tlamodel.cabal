@@ -4,10 +4,10 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: a3abf56780b49c9bffe0e67f7e032ed9da24cbbbc9062c6f87b169a4265e3fbb
+-- hash: fa88d4baef74613491f5cdcf67bb5f6526fae0283ae17cbaf30d732ff69f2200
 
 name:           tlamodel
-version:        0.9.11
+version:        0.9.13
 description:    Please see the README on GitHub at <https://github.com/craft095/tlamodel#readme>
 homepage:       https://github.com/craft095/tlamodel#readme
 bug-reports:    https://github.com/craft095/tlamodel/issues
