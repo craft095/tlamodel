@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: f5c2bdb4eb464091912dc2b94f2a8187c956040a0791bfabb659a43f980f380e
+-- hash: a3abf56780b49c9bffe0e67f7e032ed9da24cbbbc9062c6f87b169a4265e3fbb
 
 name:           tlamodel
 version:        0.9.11
@@ -20,6 +20,10 @@ build-type:     Simple
 extra-source-files:
     README.md
     ChangeLog.md
+    test/MCPriorityQueue.cfg
+    test/MCPriorityQueue.tla
+    test/PriorityQueue.model
+    test/PriorityQueue.tla
 
 source-repository head
   type: git

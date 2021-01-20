@@ -32,28 +32,36 @@ Put == \E t \in Tags :
     /\ op' = <<"put", t, ~op[3]>>
     /\ queue' = Append(queue, t)
 
-BestMatch(i) == \A j \in DOMAIN queue : LessOrEqual(queue[i], queue[j])
+Min(S) ==
+    CHOOSE x \in S:
+        \A y \in S: y >= x
 
-SelectSeqIndex(s, Test(_)) == 
+BestMatch ==
+    LET highest == {
+        i \in DOMAIN queue :
+            \A j \in DOMAIN queue : LessOrEqual(queue[i], queue[j]) }
+    IN Min(highest)
+
+SelectSeqIndex(s, Test(_)) ==
   (*************************************************************************)
   (* The subsequence of s consisting of all elements s[i] such that        *)
   (* Test(i) is true. This is derived from SelectSeq                       *)
   (*************************************************************************)
-  LET F[i \in 0..Len(s)] == 
+  LET F[k \in 0..Len(s)] ==
         (*******************************************************************)
         (* F[i] equals SelectSeqIndex(SubSeq(s, 1, i), Test]               *)
         (*******************************************************************)
-        IF i = 0 THEN << >>
-                 ELSE IF Test(i) THEN Append(F[i-1], s[i])
-                                 ELSE F[i-1]
+        IF k = 0 THEN << >>
+                 ELSE IF Test(k) THEN Append(F[k-1], s[k])
+                                 ELSE F[k-1]
   IN F[Len(s)]
 
 Get ==
     /\ Len(queue) > 0
     /\ \E i \in DOMAIN queue :
-        /\ BestMatch(i)
+        /\ i = BestMatch
         /\ op' = <<"get", queue[i], ~op[3]>>
-        /\ queue' = SelectSeq(queue, LAMBDA j: j # i)
+        /\ queue' = SelectSeqIndex(queue, LAMBDA j: j /= i)
 
 Next == Put \/ Get
 

@@ -9,6 +9,11 @@ copyright:           "2021 Dmitry Kulagin"
 extra-source-files:
 - README.md
 - ChangeLog.md
+# HPack does not allow to place these files into test section
+- test/MCPriorityQueue.cfg
+- test/MCPriorityQueue.tla
+- test/PriorityQueue.model
+- test/PriorityQueue.tla
 
 description:         Please see the README on GitHub at <https://github.com/craft095/tlamodel#readme>
 
