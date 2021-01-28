@@ -93,7 +93,7 @@ symmetryTagP :: Parser Bool
 symmetryTagP = option False (True <$ symbols ["<", "symmetrical", ">"])
 
 modelValueP :: Parser BoundValue
-modelValueP = ModelValue <$> identifierP
+modelValueP = pure ModelValue
 
 nameSetP :: Parser [Name]
 nameSetP = between (symbol "{") (symbol "}") $ commaSep identifierP
@@ -103,7 +103,7 @@ modelValuesP = ModelValues <$> symmetryTagP <*> nameSetP
 
 boundValueP :: Parser () -> Parser BoundValue
 boundValueP uptoP =
-    (modelValueTagP >> (modelValueP <|> modelValuesP))
+    (modelValueTagP >> (modelValuesP <|> modelValueP))
     <|>
     Expression <$> someTill anySingle (lookAhead uptoP)
 

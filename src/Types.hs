@@ -6,7 +6,7 @@ data BindName = BindName Name [Name]
     deriving (Show, Eq)
 
 data BoundValue
-    = ModelValue { bv_modelValue :: Name }
+    = ModelValue
     | ModelValues { bv_symmetry :: Bool, bv_modelValues :: [Name] }
     | Expression String
     deriving (Show, Eq)

@@ -3,8 +3,7 @@
 This tool takes care about boilerplate, which is required if you wish to work with TLC
 from command line. Due to TLA+/TLC specifics, some settings can only be specified in CFG file and
 some other must go into separate TLA file. If you use ToolBox, it is done by that tool.
-But if you want to use CLI, these files must be provided by you. It annoyed me enough to develop
-this small utility :)
+But if you want to use CLI, these files must be provided by you.
 
 ## How to use
 
@@ -28,7 +27,7 @@ MODULE MyModule ;                         \* The name of TLA module to model che
 CONSTANTS
   C0 <- 42                                \* scalar name and arbitrary TLA expression
   C1(x) <- x * x                          \* operator and arbitrary TLA expression
-  C2 <- [model value] X                   \* a single model value
+  C2 <- [model value]                     \* a single model value
   C3 <- [model value] { Y, Z }            \* a set of model values
   C2 <- [model value] <symmetrical> { W } \* a symmetrical set of model values
   ;

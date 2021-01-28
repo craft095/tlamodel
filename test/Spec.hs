@@ -43,14 +43,14 @@ case0 = parserCaseOk "identifier" identifierP expected content
 case1 :: Test
 case1 = parserCaseOk "Bind A Model Value" bindP expected content
     where
-        content = "Procs <- [model value] X1;"
-        expected = (BindName "Procs" [], ModelValue "X1")
+        content = "Procs <- [model value];"
+        expected = (BindName "Procs" [], ModelValue)
 
 case1_1 :: Test
 case1_1 = parserCaseOk "Bind A Model Value/<-" bindP expected content
     where
-        content = "Procs <- [model value] X1 Y <- Qwerty;"
-        expected = (BindName "Procs" [], ModelValue "X1")
+        content = "Procs <- [model value] Y <- Qwerty;"
+        expected = (BindName "Procs" [], ModelValue)
 
 case2 :: Test
 case2 = parserCaseOk "Bind A Model Values" bindP expected content

@@ -2,6 +2,7 @@ MODULE PriorityQueue;
 
 CONSTANTS 
     MaxSize <- 3
+    SomeValue <- [model value]
     Tags <- [model value] {p1, p2, p3}
     LessOrEqual(x,y) <-
         LET Priorities == [[p \in Tags |-> 0] EXCEPT ![p3]=1]

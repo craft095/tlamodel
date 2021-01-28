@@ -32,11 +32,19 @@ genMC model = (mc, cfg)
         varPrefixF :: Name -> Int -> String
         varPrefixF name ix = printf "gen%d_%s" ix name
 
-        modelValues :: [Name]
-        modelValues = concatMap (f . snd) d_constants
+        -- New model values come from sets: SomeSet <- [model value] { NewModelValue0, NewModelValue1}
+        newModelValues :: [Name]
+        newModelValues = concatMap (f . snd) d_constants
             where
-                f (ModelValue n) = [n]
                 f (ModelValues _ ns) = ns
+                f _ = []
+
+        -- All model values
+        allModelValues :: [Name]
+        allModelValues = concatMap f d_constants
+            where
+                f (BindName n _, ModelValue) = [n]
+                f (_, ModelValues _ ns) = ns
                 f _ = []
 
         symmetry :: [Name]
@@ -46,7 +54,7 @@ genMC model = (mc, cfg)
                 f _ = []
 
         prettyRhs :: BoundValue -> String
-        prettyRhs (ModelValue name) = name
+        prettyRhs ModelValue = ""
         prettyRhs (ModelValues _ names) = printf "{ %s }" $ commaSep names
         prettyRhs (Expression expr) = expr
 
@@ -67,22 +75,28 @@ genMC model = (mc, cfg)
             where
                 symmDef = printf "%s == Permutations(%s)" symmVar var
 
-        (names, defs', symmNames) = unzip3 $ zipWith addVar [0..] d_constants
+        -- Remove all single model values
+        constants' = filter (isNotModelValue . snd) d_constants
+            where
+                isNotModelValue ModelValue = False
+                isNotModelValue _ = True
+
+        (names, defs', symmNames) = unzip3 $ zipWith addVar [0..] constants'
         getName :: (BindName, a) -> Name
         getName (BindName name _, _) = name
-        remap = zip (map getName d_constants) names
+        remap = zip (map getName constants') names
 
         (symmVars, symmDefs) = unzip . catMaybes $ zipWith addSymmVar names symmNames
 
         constants =
-            if null modelValues
+            if null newModelValues
             then ""
-            else "CONSTANTS " ++ commaSep modelValues
+            else "CONSTANTS " ++ commaSep newModelValues
 
         body = List.intercalate [""] [[header], [extends], [constants], defs', symmDefs, [footer]]
 
         mc = unlines body
-        cfg = Cfg mcName model modelValues symmVars remap
+        cfg = Cfg mcName model allModelValues symmVars remap
 
 genCfg :: Cfg -> String
 genCfg Cfg {..} = unlines body
